@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.gc_coffee.repository.OrderRepository">
+
+
+        <resultMap id="orderViewResultMap" type="com.example.gc_coffee.model.dto.OrderViewDTO">
+            <id property="orderId" column="order_id"/>
+            <result property="email" column="email"/>
+            <result property="address" column="address"/>
+            <result property="zipCode" column="zipcode"/>
+            <result property="orderDateTime" column="order_date"/>
+            <result property="status" column="status"/>
+            <result property="coffeeName" column="coffee_name"/>
+            <result property="coffeePrice" column="coffee_price"/>
+            <result property="quantity" column="quantity"/>
+            <result property="totalPrice" column="total_price"/>
+        </resultMap>
+
+    <select id="getAllOrdersWithDetails" resultMap="orderViewResultMap">
+        SELECT
+            o.order_id,
+            o.email,
+            u.address,
+            u.zipcode,
+            o.order_date,
+            o.status,
+            o.total_price,
+            c.coffee_name,
+            c.coffee_price,
+            od.quantity
+        FROM orders o
+                 JOIN ordersdetail od ON o.order_id = od.order_id
+                 JOIN coffee c ON od.coffee_id = c.coffee_id
+                 JOIN user u ON o.email = u.email
+        ORDER BY o.order_id, c.coffee_name;
+    </select>
+
+
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="dto.orderId" keyColumn="order_id">
+        INSERT INTO orders (email, total_price, order_date, status)
+        VALUES (#{dto.email}, #{totalPrice}, #{dto.orderDateTime}, #{dto.status});
+    </insert>
+
+    <insert id="insertOrderDetail">
+        INSERT INTO ordersdetail (order_id, coffee_id, quantity)
+        VALUES (#{dto.orderId}, #{coffeeId}, #{quantity});
+    </insert>
+
+    <update id="updateOrderStatus">
+        UPDATE orders
+        SET status = 1
+        WHERE status = 0 AND order_id = #{orderId};
+    </update>
+
+    <delete id="deleteOrdersByEmail">
+        DELETE FROM orders
+        WHERE email = #{email};
+    </delete>
+</mapper>

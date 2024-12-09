@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.gc_coffee.repository.CoffeeRepository">
+
+    <resultMap id="coffeeResultMap" type="com.example.gc_coffee.model.dto.CoffeeDTO">
+        <id property="coffeeId" column="coffee_id"/>
+        <result property="coffeeName" column="coffee_name"/>
+        <result property="coffeePrice" column="coffee_price"/>
+    </resultMap>
+
+    <select id="selectAllCoffee" resultMap="coffeeResultMap">
+        SELECT coffee_id, coffee_name, coffee_price
+        FROM coffee
+        ORDER BY coffee_id;
+    </select>
+
+    <select id="getCoffeePriceById" resultType="int">
+        SELECT coffee_price
+        FROM coffee
+        WHERE coffee_id = #{coffeeId};
+    </select>
+
+    <select id="selectCoffeeById" resultMap="coffeeResultMap">
+        SELECT coffee_id, coffee_name, coffee_price
+        FROM coffee
+        WHERE coffee_id = #{coffeeId}
+    </select>
+
+</mapper>

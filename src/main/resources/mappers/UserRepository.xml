@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.gc_coffee.repository.UserRepository">
+
+    <resultMap id="userResultMap" type="com.example.gc_coffee.model.dto.UserDTO" >
+        <id property="userId" column="user_id"/>
+        <result property="email" column="email"/>
+        <result property="zipcode" column="zipcode"/>
+        <result property="address" column="address"/>
+        <result property="orderDateTime" column="order_date"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="orderId" column="order_id"/>
+        <result property="quantity" column="quantity"/>
+
+
+    </resultMap>
+
+    <!-- 이메일로 사용자 조회 -->
+    <select id="findByEmail" resultMap="userResultMap">
+        SELECT
+            u.email, u.address, u.zipcode,
+            o.order_id, o.order_date,o.total_price,
+            od.quantity
+        FROM user AS u
+                 INNER JOIN orders AS o
+                            ON u.email = o.email
+                 INNER JOIN ordersdetail AS od
+                            ON o.order_id = od.order_id
+        WHERE u.email = #{email} AND o.status = 0;
+    </select>
+
+</mapper>
