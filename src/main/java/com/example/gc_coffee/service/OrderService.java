@@ -41,7 +41,7 @@ public class OrderService {
     public void updateOrder(long orderId) {
         orderRepository.updateOrderStatus(orderId);
     }
-
+    //
     // 모든 주문 조회
     public List<OrderViewDTO> getAllOrdersWithDetails() {
         return orderRepository.getAllOrdersWithDetails();
